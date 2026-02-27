@@ -15,6 +15,7 @@ public class App {
             System.out.println("1. Déposer de l'argent");
             System.out.println("2. Retirer de l'argent");
             System.out.println("3. Quitter");
+            System.out.println("4. Voir l'historique");
             System.out.print("Votre choix : ");
 
             int choice = scanner.nextInt();
@@ -35,6 +36,10 @@ public class App {
                 case 3:
                     System.out.println("Au revoir !");
                     running = false;
+                    break;
+
+                case 4:
+                    account.printHistory();
                     break;
 
                 default:
