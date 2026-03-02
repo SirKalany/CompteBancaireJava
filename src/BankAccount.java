@@ -3,60 +3,52 @@ import java.util.ArrayList;
 public class BankAccount {
 
     private double balance;
-
-    // ArrayList : fonctionne comme un tableau mais de taille dynamique
-    // Elle grandit automatiquement à chaque transaction ajoutée
     private ArrayList<String> history = new ArrayList<String>();
 
-    public BankAccount(double initialBalance) {
+    public BankAccount(double initialBalance) throws IllegalArgumentException {
+        if (initialBalance < 0) {
+            throw new IllegalArgumentException("Le solde initial ne peut pas être négatif.");
+        }
         this.balance = initialBalance;
         history.add("Solde initial : " + initialBalance + "€");
     }
 
-    public void deposit(double amount) {
+    // "throws IllegalArgumentException" : signale que cette méthode peut lancer cette exception
+    public void deposit(double amount) throws IllegalArgumentException {
         if (amount <= 0) {
-            System.out.println("Erreur : le montant doit être positif.");
-            return;
+            // throw : on lance l'exception, la méthode s'arrête immédiatement
+            throw new IllegalArgumentException("Le montant doit être positif.");
         }
         this.balance += amount;
         history.add("Dépôt : +" + amount + "€  →  Solde : " + this.balance + "€");
-        System.out.println("Dépôt de " + amount + "€ effectué.");
     }
 
-    public boolean withdraw(double amount) {
+    // Cette méthode peut lancer DEUX types d'exceptions différents
+    public void withdraw(double amount) throws IllegalArgumentException, InsufficientFundsException {
         if (amount <= 0) {
-            System.out.println("Erreur : le montant doit être positif.");
-            return false;
+            throw new IllegalArgumentException("Le montant doit être positif.");
         }
         if (amount > this.balance) {
-            System.out.println("Erreur : fonds insuffisants.");
-            return false;
+            // On lance notre exception personnalisée
+            throw new InsufficientFundsException(amount);
         }
         this.balance -= amount;
         history.add("Retrait : -" + amount + "€  →  Solde : " + this.balance + "€");
-        System.out.println("Retrait de " + amount + "€ effectué.");
-        return true;
     }
 
     public double getBalance() {
         return this.balance;
     }
 
-    // Nouvelle méthode : afficher l'historique
     public void printHistory() {
         System.out.println("\n===== HISTORIQUE =====");
-
         if (history.isEmpty()) {
             System.out.println("Aucune transaction.");
             return;
         }
-
-        // Boucle for-each : parcourt chaque élément de l'ArrayList
-        // "transaction" prend la valeur de chaque String une par une
         for (String transaction : history) {
             System.out.println("- " + transaction);
         }
-
         System.out.println("======================");
     }
 }
